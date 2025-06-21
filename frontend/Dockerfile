@@ -1,13 +1,29 @@
+# билд фронтенда с использованием Node.js и Nginx
 FROM node:8 AS builder
 
-COPY . /app
-
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-RUN npm install && npm run build 
+# Копируем package.json и package-lock.json для установки зависимостей
+COPY package*.json .
 
+# Устанавливаем зависимости
+RUN npm install 
+
+# Копируем остальные файлы приложения
+COPY . .
+
+# Собираем фронтенд приложение
+RUN npm run build 
+
+# Используем Nginx для запуска фронтенда
 FROM nginx:1.27
 
-RUN rm -rf /usr/share/nginx/html && mkdir -p /usr/share/nginx/html
+# Удаляем стандартный контент Nginx
+RUN rm -rf /usr/share/nginx/html 
 
+# Создаем директорию для хранения статических файлов
+RUN mkdir -p /usr/share/nginx/html
+
+# Копируем собранные файлы из билдера в Nginx
 COPY --from=builder /app/dist/frontend/ /usr/share/nginx/html
