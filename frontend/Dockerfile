@@ -1,4 +1,4 @@
-FROM node:8 as builder
+FROM node:8 AS builder
 
 COPY . /app
 
