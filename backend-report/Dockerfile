@@ -1,5 +1,6 @@
 # Start from the latest golang base image
-FROM golang:latest as builder
+FROM golang:1.24 AS builder 
+# Исправил as на AS и стабилизировал версию golang
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -18,12 +19,15 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 
 ######## Start a new stage from scratch #######
-FROM alpine:latest  
+FROM alpine:3.22
+# стабилизировал версию alpine
 
-WORKDIR /root/
+WORKDIR /app
+# Исправил название рабочей директории
 
 # Copy the Pre-built binary file from the previous stage
-COPY --from=builderer /app/main .
+COPY --from=builder /app/main .
+# Исправил builderer на builder
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
