@@ -47,7 +47,7 @@ backend:
   replicas: 1
   strategy:
   ### Опишите стратегию RollingUpdate для бэкенда
-  image: YOUR_DOCKERHUB/sausage-backend:latest
+  image: ilenisnerd/sausage-backend:latest
   imagePullPolicy: Always
   resources:
     requests:
@@ -62,12 +62,39 @@ backend:
   vpa:
   ### Опишите VPA для бэкенда
 
-backend-report:
 ### Опишите значения для backend-report
 ### Приложение должно использовать стратегию Recreate
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
+backend-report:
+  image: igruzdo/sausage-backend-report:latest
+  revisionHistoryLimit: 15
+  replicas: 1
+  containerPort: 8080
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "200m"
+  strategy:
+    type: Recreate
+  service:
+    port: 8080
+  livenessProbe:
+    httpGet:
+      path: /api/v1/health
+      port: 8080
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  hpa:
+    minReplicas: 1
+    maxReplicas: 5
+    averageUtilization: 75
+
+
 
 infra:
   postgresql:
