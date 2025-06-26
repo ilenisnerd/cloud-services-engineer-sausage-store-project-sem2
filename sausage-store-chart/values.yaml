@@ -36,9 +36,6 @@ backend:
     port: "8080"
     scrape: "true"
   env:
-    postgresUri: jdbc:postgresql://postgresql:5432/sausage-store
-    postgresUser: store
-    postgresPassword: storepassword
     reportPath: /logs/reports
     logPath: /logs
   service:
@@ -46,21 +43,41 @@ backend:
   revisionHistoryLimit: 15
   replicas: 1
   strategy:
-  ### Опишите стратегию RollingUpdate для бэкенда
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
   image: ilenisnerd/sausage-backend:latest
   imagePullPolicy: Always
   resources:
     requests:
       memory: "256Mi"
-      cpu: "100m"
+      cpu: "25m"
     limits:
       memory: "512Mi"
-      cpu: "1"
+      cpu: "30m"
   containerPort: 8080
   livenessProbe:
-  ### Опишите LivenessProbe для бэкенда
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 15
+    periodSeconds: 30
+    timeoutSeconds: 1
+    failureThreshold: 6
   vpa:
-  ### Опишите VPA для бэкенда
+    updatePolicy:
+      updateMode: "Recreate"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          minAllowed:
+            cpu: 25m
+            memory: 0Mi
+          maxAllowed:
+            cpu: 30m
+            memory: 500Mi
+          controlledResources: ["cpu", "memory"]
 
 ### Опишите значения для backend-report
 ### Приложение должно использовать стратегию Recreate
