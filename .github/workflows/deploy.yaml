@@ -50,7 +50,9 @@ jobs:
             # Для каждого пересобранного образа 
             # устанавливаем тег latest, чтобы потом
             # на сервере и в docker-compose.yml не указывать версию образа:
-            tags: ilenisnerd/sausage-backend:${{ github.sha }}
+            tags: |
+              ilenisnerd/sausage-backend:latest
+              ilenisnerd/sausage-backend:${{ github.sha }}
             build-args: |
               VERSION=${{ github.sha }}
         - name: Push Frontend to DockerHub
@@ -58,13 +60,17 @@ jobs:
           with:
             context: ./frontend/
             push: true
-            tags: ilenisnerd/sausage-frontend:${{ github.sha }}
+            tags: 
+              ilenisnerd/sausage-frontend:latest
+              ilenisnerd/sausage-frontend:${{ github.sha }}
         - name: Push Backend-report to DockerHub
           uses: docker/build-push-action@v4
           with:
             context: ./backend-report/
             push: true
-            tags: ilenisnerd/sausage-backend-report:${{ github.sha }}
+            tags:
+              ilenisnerd/sausage-backend-report:latest 
+              ilenisnerd/sausage-backend-report:${{ github.sha }}
   # Упаковываем helm-чарт и пушим его в Nexus
   add_helm_chart_to_nexus:
       name: Add Helm Chart To Nexus
