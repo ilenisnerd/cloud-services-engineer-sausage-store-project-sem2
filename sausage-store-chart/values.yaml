@@ -115,13 +115,13 @@ backend-report:
 infra:
   postgres:
     env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: sausagedb
+      POSTGRES_USER: store
+      POSTGRES_PASSWORD: storepassword
+      POSTGRES_DB: sausage-store
     containerPort: 5432
   mongodb:
     env:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootpassword
-      MONGO_INITDB_DATABASE: sausagedb
+      MONGO_INITDB_ROOT_USERNAME: reports
+      MONGO_INITDB_ROOT_PASSWORD: reportspassword
+      MONGO_INITDB_DATABASE: sausage-store
     containerPort: 27017
