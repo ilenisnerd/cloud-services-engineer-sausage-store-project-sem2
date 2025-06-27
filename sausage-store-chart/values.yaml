@@ -85,7 +85,7 @@ backend:
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
 backend-report:
-  image: igruzdo/sausage-backend-report:latest
+  image: ilenisnerd/sausage-backend-report:latest
   revisionHistoryLimit: 15
   replicas: 1
   containerPort: 8080
