@@ -60,7 +60,7 @@ jobs:
           with:
             context: ./frontend/
             push: true
-            tags: 
+            tags: |
               ilenisnerd/sausage-frontend:latest
               ilenisnerd/sausage-frontend:${{ github.sha }}
         - name: Push Backend-report to DockerHub
@@ -68,7 +68,7 @@ jobs:
           with:
             context: ./backend-report/
             push: true
-            tags:
+            tags: |
               ilenisnerd/sausage-backend-report:latest 
               ilenisnerd/sausage-backend-report:${{ github.sha }}
   # Упаковываем helm-чарт и пушим его в Nexus
