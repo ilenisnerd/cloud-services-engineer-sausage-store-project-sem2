@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
-      secretName: {{ .Values.frontend.ingress.tlsSecretName }} # Добавил секрет для TLS из values.yaml
+      secretName: {{ .Values.ingress.tlsSecretName }} # Добавил секрет для TLS из values.yaml
   rules:
     - host: {{ .Values.ingress.host }}
       http:
