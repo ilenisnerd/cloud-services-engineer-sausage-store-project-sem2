@@ -1,9 +1,5 @@
 global:
   imagePullPolicy: Always
-  ###vault:
-  ###  host: ip
-  ###  name: vault
-  ###  vaultToken: someToken
 
 
 frontend:
@@ -14,7 +10,7 @@ frontend:
   service:
     port: 80
   ingress:
-    host: front-ilenisnerd.students-projects.ru # Корректный домен будет указан в задании
+    host: ilenisnerd.students-projects.ru # Корректный домен будет указан в задании
     path: /
     pathType: Prefix
     tlsSecretName: 2sem-students-projects-wildcard-secret
@@ -25,8 +21,8 @@ frontend:
       memory: "128Mi"
       cpu: "100m"
     limits:
-      memory: "256Mi"
-      cpu: "300m"
+      memory: "128Mi"
+      cpu: "250m"
   nginxConf: nginx.conf
 
 backend:
@@ -35,6 +31,9 @@ backend:
     port: "8080"
     scrape: "true"
   env:
+    postgresUri: jdbc:postgresql://postgresql:5432/sausage-store
+    postgresUser: store
+    postgresPassword: storepassword
     reportPath: /logs/reports
     logPath: /logs
   service:
@@ -51,10 +50,10 @@ backend:
   resources:
     requests:
       memory: "256Mi"
-      cpu: "25m"
+      cpu: "125m"
     limits:
       memory: "512Mi"
-      cpu: "30m"
+      cpu: "500m"
   containerPort: 8080
   livenessProbe:
     httpGet:
@@ -83,7 +82,7 @@ backend:
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
-backend-report:
+backend-report: 
   image: ilenisnerd/sausage-backend-report:latest
   revisionHistoryLimit: 15
   replicas: 1
@@ -99,6 +98,8 @@ backend-report:
     type: Recreate
   service:
     port: 8080
+  secret:
+    db: "mongodb://reports:reportspassword@mongodb:27017/sausage-store"
   livenessProbe:
     httpGet:
       path: /api/v1/health
@@ -121,7 +122,9 @@ infra:
     containerPort: 5432
   mongodb:
     env:
-      MONGO_INITDB_ROOT_USERNAME: reports
-      MONGO_INITDB_ROOT_PASSWORD: reportspassword
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
       MONGO_INITDB_DATABASE: sausage-store
+      MONGO_REPORT_USER: reports
+      MONGO_REPORT_PASSWORD: reportspassword
     containerPort: 27017

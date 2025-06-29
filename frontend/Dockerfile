@@ -27,3 +27,8 @@ RUN mkdir -p /usr/share/nginx/html
 
 # Копируем собранные файлы из билдера в Nginx
 COPY --from=builder /app/dist/frontend/ /usr/share/nginx/html
+
+EXPOSE 80
+
+# Запускаем nginx в режиме демона
+CMD ["nginx", "-g", "daemon off;"]
