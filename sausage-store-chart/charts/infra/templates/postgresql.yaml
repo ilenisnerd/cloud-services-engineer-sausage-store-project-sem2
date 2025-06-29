@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: postgresql
   annotations:
     helm.sh/hook-weight: "-5"
 spec:
-  serviceName: postgres
+  serviceName: postgresql
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgresql
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgresql
     spec:
       containers:
-        - name: postgres
+        - name: postgresql
           image: postgres:14
           envFrom:
             - configMapRef:
                 name: postgres-conf
           ports:
-            - containerPort: {{ .Values.postgres.containerPort }}
+            - containerPort: {{ .Values.postgresql.containerPort }}
           resources:
             requests:
               memory: "128Mi"
@@ -45,15 +45,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
+  name: postgresql
   labels:
-    app: postgres
+    app: postgresql
 spec:
   ports:
-    - port: {{ .Values.postgres.containerPort }}
-      targetPort: {{ .Values.postgres.containerPort }}
+    - port: {{ .Values.postgresql.containerPort }}
+      targetPort: {{ .Values.postgresql.containerPort }}
   selector:
-    app: postgres
+    app: postgresql
   clusterIP: None
 ---
 apiVersion: v1
@@ -61,6 +61,6 @@ kind: ConfigMap
 metadata:
   name: postgres-conf
 data:
-  POSTGRES_USER: {{ .Values.postgres.env.POSTGRES_USER }}
-  POSTGRES_PASSWORD: {{ .Values.postgres.env.POSTGRES_PASSWORD }}
-  POSTGRES_DB: {{ .Values.postgres.env.POSTGRES_DB }}
+  POSTGRES_USER: {{ .Values.postgresql.env.POSTGRES_USER }}
+  POSTGRES_PASSWORD: {{ .Values.postgresql.env.POSTGRES_PASSWORD }}
+  POSTGRES_DB: {{ .Values.postgresql.env.POSTGRES_DB }}
