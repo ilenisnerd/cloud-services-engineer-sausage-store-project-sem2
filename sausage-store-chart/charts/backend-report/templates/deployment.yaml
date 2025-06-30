@@ -13,7 +13,6 @@ metadata:
     app.kubernetes.io/component: {{ .Chart.Name }}
     app.kubernetes.io/part-of: {{ .Release.Name }}
 spec:
-  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ .Values.replicas }}
   strategy:
 {{ toYaml .Values.strategy | indent 4 }} 
@@ -41,7 +40,7 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           ports:
-            - name: {{ .Chart.Name }}
+            - name: http
               containerPort: {{ .Values.containerPort }}
           env:
             - name: PORT
@@ -72,7 +71,7 @@ metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-secret
 type: Opaque
 data:
-  db: {{ .Values.secret.db | b64enc }}
+  db: "{{ .Values.secret.db | b64enc }}"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler

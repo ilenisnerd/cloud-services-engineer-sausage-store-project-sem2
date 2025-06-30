@@ -1,7 +1,6 @@
 global:
   imagePullPolicy: Always
 
-
 frontend:
   replicas: 1
   revisionHistoryLimit: 15
@@ -76,6 +75,7 @@ backend:
           maxAllowed:
             cpu: "1"
             memory: "512Mi"
+
 ### Опишите значения для backend-report
 ### Приложение должно использовать стратегию Recreate
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
@@ -83,16 +83,15 @@ backend:
 ### Опишите HPA для backend-report
 backend-report: 
   image: ilenisnerd/sausage-backend-report:latest
-  revisionHistoryLimit: 15
   replicas: 1
   containerPort: 8080
   resources:
     requests:
-      memory: "256Mi"
+      memory: "128Mi"
       cpu: "100m"
     limits:
-      memory: "512Mi"
-      cpu: "200m"
+      memory: "256Mi"
+      cpu: "250m"
   strategy:
     type: Recreate
   service:
@@ -111,7 +110,6 @@ backend-report:
     minReplicas: 1
     maxReplicas: 5
     averageUtilization: 75
-
 
 
 infra:
