@@ -25,6 +25,16 @@ spec:
       labels:
         app: {{ .Release.Name }}-{{ .Chart.Name }}
     spec:
+        - name: wait-for-mongodb
+          image: busybox:1.35
+          command: ['sh', '-c', 'until nc -z mongodb 27017; do echo "Waiting for MongoDB..."; sleep 5; done']
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi 
       containers:
         - name: {{ .Chart.Name }}
           image: {{ .Values.image }}
@@ -34,7 +44,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-                  key: PORT
+                  key: port
             - name: DB
               valueFrom:
                 secretKeyRef:
@@ -61,7 +71,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
 data:
-  PORT: "8080"
+  port: "{{ .Values.service.port }}"
 
 
 ---
