@@ -65,7 +65,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
 data:
-  port: {{ .Values.service.port }}
+  port: "{{ .Values.service.port }}"
 
 ---
 apiVersion: v1
