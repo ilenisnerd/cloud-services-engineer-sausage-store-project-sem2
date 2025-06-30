@@ -58,13 +58,6 @@ spec:
               containerPort: {{ .Values.containerPort }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | indent 12 }} 
-      volumes:
-      - name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-        configMap:
-          name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
-          items:
-            - key: PORT
-              path: PORT
 
 ---
 apiVersion: v1
@@ -72,8 +65,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
 data:
-  port: "{{ .Values.service.port }}"
-
+  port: {{ .Values.service.port }}
 
 ---
 apiVersion: v1

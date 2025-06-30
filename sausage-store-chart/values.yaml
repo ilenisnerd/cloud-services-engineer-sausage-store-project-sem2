@@ -86,7 +86,7 @@ backend-report:
   image: ilenisnerd/sausage-backend-report:latest
   revisionHistoryLimit: 15
   replicas: 1
-  containerPort: 8080
+  containerPort: 8081
   resources:
     requests:
       memory: "256Mi"
@@ -97,13 +97,13 @@ backend-report:
   strategy:
     type: Recreate
   service:
-    port: 8080
+    port: "8081"
   secret:
     db: "mongodb://reports:reportspassword@mongodb:27017/sausage-store"
   livenessProbe:
     httpGet:
       path: /api/v1/health
-      port: 8080
+      port: 8081
     initialDelaySeconds: 15
     periodSeconds: 10
   hpa:
