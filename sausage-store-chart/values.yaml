@@ -10,7 +10,7 @@ frontend:
   service:
     port: 80
   ingress:
-    host: ilenisnerd.students-projects.ru # Корректный домен будет указан в задании
+    host: ilenisnerd.students-projects.ru
     path: /
     pathType: Prefix
     tlsSecretName: 2sem-students-projects-wildcard-secret
