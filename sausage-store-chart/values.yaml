@@ -64,19 +64,18 @@ backend:
     timeoutSeconds: 1
     failureThreshold: 6
   vpa:
+    enabled: true
     updatePolicy:
-      updateMode: "Recreate"
+      updateMode: "Auto"
     resourcePolicy:
       containerPolicies:
         - containerName: "*"
           minAllowed:
-            cpu: 25m
-            memory: 0Mi
+            cpu: "100m"
+            memory: "256Mi"
           maxAllowed:
-            cpu: 30m
-            memory: 500Mi
-          controlledResources: ["cpu", "memory"]
-
+            cpu: "1"
+            memory: "512Mi"
 ### Опишите значения для backend-report
 ### Приложение должно использовать стратегию Recreate
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
@@ -98,13 +97,15 @@ backend-report:
     type: Recreate
   service:
     port: "8080"
+    portsvc: 8080
+    type: ClusterIP
   secret:
     db: "mongodb://reports:reportspassword@mongodb:27017/sausage-store"
   livenessProbe:
     httpGet:
       path: /api/v1/health
-      port: 8080
-    initialDelaySeconds: 30
+      port: http
+    initialDelaySeconds: 45
     periodSeconds: 10
   hpa:
     minReplicas: 1

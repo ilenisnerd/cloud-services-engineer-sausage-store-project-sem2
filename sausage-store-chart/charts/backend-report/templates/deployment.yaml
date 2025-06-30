@@ -58,7 +58,6 @@ spec:
 {{ toYaml .Values.resources | indent 12 }} 
           livenessProbe:
 {{ toYaml .Values.livenessProbe | indent 12 }} 
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -66,7 +65,6 @@ metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
 data:
   port: "{{ .Values.service.port }}"
-
 ---
 apiVersion: v1
 kind: Secret
@@ -75,8 +73,6 @@ metadata:
 type: Opaque
 data:
   db: {{ .Values.secret.db | b64enc }}
-
-
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -90,9 +86,32 @@ spec:
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: {{ .Values.hpa.averageUtilization }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.averageUtilization }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-svc
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: "{{ .Chart.AppVersion }}"
+    app.kubernetes.io/managed-by: "{{ .Release.Service }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    app.kubernetes.io/component: {{ .Chart.Name }}
+    app.kubernetes.io/part-of: {{ .Release.Name }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.portsvc }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

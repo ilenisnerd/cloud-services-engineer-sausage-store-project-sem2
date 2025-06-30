@@ -71,6 +71,12 @@ spec:
         configMap:
           name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
           items:
+            - key: postgres_uri
+              path: postgres_uri
+            - key: postgres_user
+              path: postgres_user
+            - key: postgres_password
+              path: postgres_password
             - key: report_path
               path: report_path
             - key: log_path
