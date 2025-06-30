@@ -38,3 +38,5 @@ Then open your browser and go to [http://localhost](http://localhost)
 # Проект второго семестра
 
 Можно открыть по ссылке ilenisnerd.students-projects.ru
+
+Работают все сервисы
