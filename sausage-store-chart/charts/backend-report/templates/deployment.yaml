@@ -40,6 +40,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: {{ .Values.containerPort }}
           env:
             - name: PORT
               valueFrom:
@@ -53,9 +56,6 @@ spec:
                   key: db
           resources:
 {{ toYaml .Values.resources | indent 12 }} 
-          ports:
-            - name: {{ .Chart.Name }}
-              containerPort: {{ .Values.containerPort }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | indent 12 }} 
 
